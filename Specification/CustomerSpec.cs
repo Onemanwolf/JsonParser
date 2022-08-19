@@ -8,6 +8,7 @@ namespace JsonParser.Specification
         {
             // Apply business rules here in the IsSatisfiedBy method
              var exist = await CustomerEmailExist(customer.Email);
+             // Business rule around if a customer address exit you cannot create a customer with the same address 
              var addressExist = await CustomerAddressExist(customer.Address);
              if(exist == true){
                 throw new Exception("Email already exist");
