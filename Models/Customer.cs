@@ -1,7 +1,8 @@
 using JsonParser.Models;
+using JsonParser.Specification;
 using Newtonsoft.Json;
 
-namespace JsonParser.Parser
+namespace JsonParser.Models
 {
     public class Customer
     {
@@ -21,41 +22,46 @@ namespace JsonParser.Parser
 
 
 
+        //Use a factory method to create a new Customer object from a JSON string
         public async Task<Customer> CreateCustomer(Customer data)
         {
 
             // Check if the customer already exists
-            var exist = await CustomerEmailExist(data.Email);
-             if(exist == true){
-                throw new Exception("Email already exist");
-             }
-            // Create the customer
-            var customer = new Customer
+            // this can also include any business rules for the customer creation
+            var customerSpec = new CustomerSpec();
+            var isSatisfied = await customerSpec.IsSatisfiedBy(data);
+            if (isSatisfied == true)
             {
-                FirstName = data.FirstName,
-                LastName = data.LastName,
-                Email = data.Email,
-                PhoneNumber = data.PhoneNumber,
-                Address = new Address
+
+                // Create the customer
+                var customer = new Customer
                 {
-                    Street = data.Address.Street,
-                    City = data.Address.City,
-                    State = data.Address.State,
-                    ZipCode = data.Address.ZipCode
-                },
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
+                    Email = data.Email,
+                    PhoneNumber = data.PhoneNumber,
+                    Address = new Address
+                    {
+                        Street = data.Address.Street 
+                        City = data.Address.City,
+                        State = data.Address.State,
+                        ZipCode = data.Address.ZipCode
+                    },
 
-                CustomerId = Guid.NewGuid().ToString()
-            };
+                    CustomerId = Guid.NewGuid().ToString()
+                };
 
-            return customer;
-        }
-
-        private async Task<bool> CustomerEmailExist(string email)
-        {
-            if(email == "timothy.oleson@gmail.com"){
-                return await Task.FromResult(true);
+                return customer;
             }
-            return await Task.FromResult(false);
+            else
+            {
+
+                throw new Exception("Customer is not creation not valid");
+            }
+
+
         }
+
+
     }
 }
