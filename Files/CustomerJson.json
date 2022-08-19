@@ -1,0 +1,11 @@
+{
+    "firstName": "Kathleen",
+    "lastName": "Bennett",
+    "email": "kathleen.bennett@gmail.com",
+    "phone": "1-816-816-8161",
+    "address": {
+    "street": "816 816 8161",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10001"}
+}
